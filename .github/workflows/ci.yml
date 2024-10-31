@@ -40,7 +40,7 @@ jobs:
               id: meta
               uses: docker/metadata-action@v5
               with:
-                  images: ${{ env.REGISTRY }}/${{ matrix.os }}-${{ github.repository }}
+                  images: ${{ env.REGISTRY }}/${{ github.repository }}-${{ matrix.os }}
                   tags: |
                       type=ref,event=branch
                       type=ref,event=pr
@@ -50,7 +50,7 @@ jobs:
               with:
                   context: ${{ matrix.os }}
                   push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
-                  tags: ${{ env.REGISTRY }}/${{ matrix.os }}-${{ github.repository }}:${{ github.run_number}},${{ env.REGISTRY }}/${{ matrix.os }}-${{ github.repository }}:latest
+                  tags: ${{ env.REGISTRY }}/${{ github.repository }}-${{ matrix.os }}:${{ github.run_number}},${{ env.REGISTRY }}/${{ github.repository }}-${{ matrix.os }}:latest
                   labels: ${{ steps.meta.outputs.labels }}
                   cache-from: type=local,src=/tmp/.buildx-cache
                   cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
