@@ -9,7 +9,6 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 env:
     REGISTRY: ghcr.io
-    IMAGE_NAME: ${{ github.repository }}
 
 jobs:
     docker:
@@ -42,7 +41,7 @@ jobs:
               id: meta
               uses: docker/metadata-action@v5
               with:
-                  images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+                  images: ${{ env.REGISTRY }}/${{ matrix.os }}-${{ github.repository }}
                   tags: |
                       type=ref,event=branch
                       type=ref,event=pr
@@ -52,7 +51,7 @@ jobs:
               with:
                   context: ${{ matrix.os }}
                   push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
-                  tags: ${{ env.REGISTRY }}/${{ matrix.os }}-${{ env.IMAGE_NAME }}:${{ github.run_number}},${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+                  tags: ${{ env.REGISTRY }}/${{ matrix.os }}-${{ github.repository }}:${{ github.run_number}},${{ env.REGISTRY }}/${{ matrix.os }}-${{ github.repository }}:latest
                   labels: ${{ steps.meta.outputs.labels }}
                   cache-from: type=local,src=/tmp/.buildx-cache
                   cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
